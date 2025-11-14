@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keranjang Belanja Crains</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo a {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: #111;
+    }
+
+    main.cart-page {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    .cart-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 1rem;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      flex-wrap: wrap;
+    }
+
+    .cart-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 2;
+      min-width: 250px;
+    }
+
+    .cart-info img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .cart-details p {
+      margin: 4px 0;
+      font-size: 0.95rem;
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 5px;
+    }
+
+    .quantity-btn {
+      background: #fff;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .quantity-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .cart-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .cart-price {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .remove-btn {
+      background: crimson;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .remove-btn:hover {
+      background: darkred;
+    }
+
+    .summary {
+      border-top: 1px solid #ddd;
+      padding-top: 1rem;
+      text-align: right;
+    }
+
+    .summary strong {
+      font-size: 1.1rem;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: #111;
+      color: white;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+    }
+
+    .checkout-btn:hover {
+      background: #333;
+    }
+
+    .empty {
+      text-align: center;
+      color: #777;
+      padding: 3rem 0;
+      font-style: italic;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    select {
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      margin-left: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .cart-actions {
+        align-items: flex-start;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo"><a href="index.html">CRAINS</a></div>
+  </header>
+
+  <main class="cart-page">
+    <h1>Keranjang Anda</h1>
+    <div id="cartItems" class="cart-items"></div>
+
+    <div class="summary" id="summarySection" style="display:none;">
+      <p><strong>Subtotal:</strong> <span id="subtotal">Rp0</span></p>
+      <p><strong>Total:</strong> <span id="total">Rp0</span></p>
+      <button class="checkout-btn" onclick="window.location.href='checkout.html'">Lanjut ke Pembayaran</button>
+    </div>
+  </main>
+
+  <script>
+    function restoreProductBackup(item) {
+  const backup = JSON.parse(localStorage.getItem(`product_backup_${item.id}`));
+  if (!backup) return item;
+
+  return {
+    ...backup,
+    ...item, // data dari cart tetap menang (size, color, qty)
+    price: backup.price,
+    availableSizes: backup.availableSizes,
+    availableColors: backup.availableColors
+  };
+}
+
+(function() {
+  // --- Fungsi bantu aman untuk ambil & simpan localStorage ---
+  function safeParse(key) {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch {
+      return null;
+    }
+  }
+
+  function safeSave(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  // --- Ambil data cart utama dan backup ---
+  let cart = safeParse("cart") || [];
+  let backup = safeParse("cart_backup") || [];
+
+  // --- Pulihkan dari backup jika cart kosong tetapi backup tersedia ---
+  if ((!cart || cart.length === 0) && backup && backup.length > 0) {
+    console.info("Keranjang utama kosong, memulihkan dari backup...");
+    cart = backup;
+    safeSave("cart", cart);
+  }
+
+  // --- Fungsi render utama (tetap mempertahankan tampilan lama) ---
+  function renderCart() {
+    const cartItems = document.getElementById("cartItems");
+    const subtotalEl = document.getElementById("subtotal");
+    const totalEl = document.getElementById("total");
+    const summary = document.getElementById("summarySection");
+
+    if (!cartItems) return;
+
+    cartItems.innerHTML = "";
+    if (!cart || cart.length === 0) {
+      cartItems.innerHTML = `<p class="empty">Keranjang Anda masih kosong.</p>`;
+      if (summary) summary.style.display = "none";
+      return;
+    }
+
+    let subtotal = 0;
+    cart.forEach((rawItem, index) => {
+  const item = restoreProductBackup(rawItem);
+      item.total = item.price * item.qty;
+      subtotal += item.total;
+
+      // --- Elemen HTML item keranjang ---
+      const div = document.createElement("div");
+      div.className = "cart-item";
+      div.innerHTML = `
+        <div class="cart-info">
+          <img src="${item.img}" alt="${item.name}">
+          <div class="cart-details">
+            <p><strong>${item.name}</strong></p>
+
+            <!-- Pilihan Ukuran -->
+            <p>Ukuran:
+              <select class="size-select" data-index="${index}">
+                ${(item.availableSizes || [item.size]).map(size => `
+                  <option value="${size}" ${size === item.size ? "selected" : ""}>${size}</option>
+                `).join("")}
+              </select>
+            </p>
+
+            <!-- Pilihan Warna -->
+            <p>Warna:
+              <select class="color-select" data-index="${index}">
+                ${(item.availableColors || [item.color]).map(color => `
+                  <option value="${color}" ${color === item.color ? "selected" : ""}>${color}</option>
+                `).join("")}
+              </select>
+            </p>
+
+            <!-- Kontrol Kuantitas -->
+            <p>Jumlah:
+              <button class="qty-btn" data-index="${index}" data-delta="-1">−</button>
+              ${item.qty}
+              <button class="qty-btn" data-index="${index}" data-delta="1">+</button>
+            </p>
+          </div>
+        </div>
+        <div class="cart-actions">
+          <p class="cart-price">Rp ${item.total.toLocaleString("id-ID")}</p>
+          <button class="remove-btn" data-index="${index}">Hapus</button>
+        </div>
+      `;
+      cartItems.appendChild(div);
+    });
+
+    if (subtotalEl) subtotalEl.textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
+    if (totalEl) totalEl.textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
+    if (summary) summary.style.display = "block";
+
+    attachEvents(); // Tambahkan event listener setiap kali render
+  }
+
+  // --- Fungsi simpan & backup ---
+  function saveAll() {
+    safeSave("cart", cart);
+    safeSave("cart_backup", cart);
+  }
+
+  // --- Event listener untuk perubahan ukuran, warna, dan jumlah ---
+  function attachEvents() {
+    document.querySelectorAll(".size-select").forEach(sel => {
+      sel.addEventListener("change", () => {
+        const idx = sel.dataset.index;
+        cart[idx].size = sel.value;
+        saveAll();
+      });
+    });
+
+    document.querySelectorAll(".color-select").forEach(sel => {
+      sel.addEventListener("change", () => {
+        const idx = sel.dataset.index;
+        cart[idx].color = sel.value;
+        saveAll();
+      });
+    });
+
+    document.querySelectorAll(".qty-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = btn.dataset.index;
+        const delta = Number(btn.dataset.delta);
+        cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+        cart[idx].total = cart[idx].qty * cart[idx].price;
+        saveAll();
+        renderCart();
+      });
+    });
+
+    document.querySelectorAll(".remove-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = btn.dataset.index;
+        cart.splice(idx, 1);
+        saveAll();
+        renderCart();
+      });
+    });
+  }
+
+  // --- Tombol Kosongkan Keranjang jika tersedia ---
+  const clearBtn = document.getElementById("clearCart");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      if (!confirm("Yakin ingin menghapus semua produk di keranjang?")) return;
+      cart = [];
+      saveAll();
+      renderCart();
+    });
+  }
+
+  // --- Render awal ---
+  renderCart();
+
+})();
+</script>
+
+
+</body>
+</html>

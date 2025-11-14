@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pesanan Berhasil</title>
+
+<style>
+    body { font-family: "Poppins", sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f9f9f9; }
+    .success-container { background: #fff; padding: 40px; border-radius: 20px; width: 90%; max-width: 600px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .success-icon { font-size: 70px; color: #31c276; margin-bottom: 15px; }
+    .order-detail { text-align: left; background: #f2f2f2; padding: 14px; border-radius: 14px; margin-top: 15px; font-size: 14px; max-height: 320px; overflow:auto; }
+    .btn { margin-top: 25px; display: inline-block; background: #111; color: white; padding: 14px 20px; border-radius: 12px; text-decoration: none; font-size: 15px; }
+</style>
+</head>
+
+<body>
+<div class="success-container">
+    <div class="success-icon">✅</div>
+    <h2>Pesanan Berhasil Dibuat!</h2>
+    <p>Terima kasih sudah berbelanja.<br>Detail pesanan kamu ada di bawah ini:</p>
+
+    <div id="order-summary" class="order-detail"></div>
+
+    <a href="index.html" class="btn">Kembali ke Beranda</a>
+</div>
+
+ <script>
+const order = JSON.parse(localStorage.getItem("orderData")) || [];
+const box = document.getElementById("order-summary");
+
+if (order.length === 0) {
+  box.innerHTML = "<strong>Tidak ada data pesanan ditemukan.</strong>";
+} else {
+  let total = 0;
+  order.forEach(item => {
+    total += item.total;
+    box.innerHTML += `
+      <strong>${item.name}</strong><br>
+      Ukuran: ${item.size}<br>
+      Warna: ${item.color}<br>
+      Jumlah: ${item.qty}<br>
+      Total Harga: Rp ${item.total.toLocaleString("id-ID")}<br>
+      <hr>
+    `;
+  });
+  box.innerHTML += `<strong>Total Pembayaran: Rp ${total.toLocaleString("id-ID")}</strong>`;
+}
+
+// Hapus data setelah tampil
+setTimeout(() => {
+  localStorage.removeItem("orderData");
+  localStorage.removeItem("cart");
+  localStorage.removeItem("cart_backup");
+}, 1000);
+</script>
+
+
+
+
+
+
+</body>
+</html>

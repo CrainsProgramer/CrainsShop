@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produk - Zoom Vomero 5 Men's Sneakers Shoes - Dark Stucco</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      color: #111;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo a {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: #111;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #111;
+      font-weight: 600;
+    }
+
+    nav a:hover {
+      color: #888;
+    }
+
+    main.product-page {
+      max-width: 1100px;
+      margin: 2rem auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: flex-start;
+      padding: 0 1rem;
+    }
+
+    /* === SLIDER === */
+    .product-image {
+      flex: 1;
+      min-width: 320px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .slider {
+      display: flex;
+      transition: transform 0.4s ease-in-out;
+      width: 100%;
+    }
+
+    .slide {
+      min-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .slide img {
+      width: 100%;
+      border-radius: 12px;
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+      font-size: 1.2rem;
+    }
+
+    .slider-btn:hover {
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .prev {
+      left: 10px;
+    }
+
+    .next {
+      right: 10px;
+    }
+
+    /* === DETAIL PRODUK === */
+    .product-details {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .product-details h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .price {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .option-group {
+      margin-top: 1rem;
+    }
+
+    .option-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .option-btn {
+      padding: 10px 16px;
+      border: 1px solid #aaa;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover {
+      border-color: #000;
+    }
+
+    .option-btn.active {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    /* Kuantitas */
+    .quantity-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .quantity-control input {
+      width: 60px;
+      border: none;
+      text-align: center;
+      font-size: 1rem;
+      padding: 8px;
+    }
+
+    .quantity-control button {
+      background: #f5f5f5;
+      border: none;
+      padding: 8px 12px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .quantity-control button:hover {
+      background: #ddd;
+    }
+
+    button.add-to-cart {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: #111;
+      color: white;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button.add-to-cart:hover {
+      background: #333;
+    }
+
+    @media (max-width: 768px) {
+      main.product-page {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo"><a href="shop-sale.html">CRAINS</a></div>
+  </header>
+
+  <main class="product-page">
+    <!-- Gambar dengan fitur slide -->
+    <div class="product-image">
+      <div class="slider" id="slider">
+        <div class="slide"><img src="sale2-1.jpg" alt="Zoom Vomero 5 Men's Sneakers Shoes - Dark Stucco"></div>
+        <div class="slide"><img src="sale2-2.jpg" alt="Zoom Vomero 5 Men's Sneakers Shoes - Dark Stucco"></div>
+        <div class="slide"><img src="sale2-3.jpg" alt="Zoom Vomero 5 Men's Sneakers Shoes - Dark Stucco"></div>
+        <div class="slide"><img src="sale2-4.jpg" alt="Zoom Vomero 5 Men's Sneakers Shoes - Dark Stucco"></div>
+      </div>
+      <button class="slider-btn prev" id="prevBtn">❮</button>
+      <button class="slider-btn next" id="nextBtn">❯</button>
+    </div>
+
+    <!-- Detail Produk -->
+    <div class="product-details">
+      <h1>Zoom Vomero 5 Men's Sneakers Shoes - Dark Stucco</h1>
+      <p>Berlarilah sejauh mungkin dengan dukungan Zoom Vomero 5 Men's Sneakers Shoes - Dark Stucco yang nyaman. Desainnya yang berlapis-lapis meliputi aksen tekstil, kulit, dan plastik yang berpadu menjadi salah satu sepatu kets paling keren musim ini.</p>
+      <div class="price"><s>Rp 2.489.000</s>- Rp 1.244.000</div>
+
+      <!-- Pilihan Ukuran -->
+      <div class="option-group">
+        <div class="option-title">Pilih Ukuran:</div>
+        <div class="options" id="sizeOptions">
+          <button class="option-btn" data-value="37">37</button>
+          <button class="option-btn" data-value="38">38</button>
+          <button class="option-btn" data-value="39">39</button>
+          <button class="option-btn" data-value="40">40</button>
+          <button class="option-btn" data-value="41">41</button>
+          <button class="option-btn" data-value="42">42</button>
+          <button class="option-btn" data-value="43">43</button>
+          <button class="option-btn" data-value="44">44</button>
+        </div>
+      </div>
+      
+     <!-- Pilihan Warna -->
+      <div class="option-group">
+        <div class="option-title">Pilih Warna:</div>
+        <div class="options" id="colorOptions">
+          <button class="option-btn" data-value="Hijau">Hijau</button>
+        </div>
+      </div>
+
+      <!-- Kuantitas -->
+      <div class="quantity-container">
+        <label class="option-title">Jumlah:</label>
+        <div class="quantity-control">
+          <button id="decreaseQty">−</button>
+          <input type="text" id="quantity" value="1" readonly>
+          <button id="increaseQty">+</button>
+        </div>
+      </div>
+
+      <button class="add-to-cart">Tambah ke Keranjang</button>
+    </div>
+  </main>
+  
+  <script>
+    /* === SLIDER === */
+    const slider = document.getElementById('slider');
+    const slides = document.querySelectorAll('.slide');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    let index = 0;
+
+    function showSlide(i) {
+      if (i >= slides.length) index = 0;
+      if (i < 0) index = slides.length - 1;
+      slider.style.transform = `translateX(${-index * 100}%)`;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      index++;
+      showSlide(index);
+    });
+
+    prevBtn.addEventListener('click', () => {
+      index--;
+      showSlide(index);
+    });
+
+    // Swipe (untuk mobile)
+    let startX = 0;
+    slider.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    slider.addEventListener('touchend', e => {
+      const endX = e.changedTouches[0].clientX;
+      if (startX - endX > 50) {
+        index++;
+        showSlide(index);
+      } else if (endX - startX > 50) {
+        index--;
+        showSlide(index);
+      }
+    });
+
+    /* === PILIHAN UKURAN & WARNA === */
+    const sizeButtons = document.querySelectorAll('#sizeOptions .option-btn');
+    let selectedSize = '';
+    sizeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedSize = btn.dataset.value;
+      });
+    });
+    
+        const colorButtons = document.querySelectorAll('#colorOptions .option-btn');
+    let selectedColor = '';
+    colorButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        colorButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedColor = btn.dataset.value;
+      });
+    });
+
+    /* === KUANTITAS === */
+    const qtyInput = document.getElementById('quantity');
+    document.getElementById('increaseQty').addEventListener('click', () => {
+      qtyInput.value = parseInt(qtyInput.value) + 1;
+    });
+    document.getElementById('decreaseQty').addEventListener('click', () => {
+      if (parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+    });
+
+/* === TAMBAH KE KERANJANG === */
+document.querySelector(".add-to-cart").addEventListener("click", function() {
+  const qty = parseInt(qtyInput.value);
+  const price = 1244000;
+
+  if (!selectedSize || !selectedColor) {
+    alert("Silakan pilih ukuran dan warna terlebih dahulu!");
+    return;
+  }
+
+  const currentImage = slides[index].querySelector("img").src;
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  // ✅ struktur data yang benar dan konsisten
+  const product = {
+    id: 1,
+    name: "Zoom Vomero 5 Men's Sneakers Shoes - Dark Stucco",
+    img: currentImage,
+    size: selectedSize,
+    color: selectedColor,
+    qty: qty,
+    price: price,
+    total: qty * price
+  };
+
+  // ✅ Jika produk sama sudah pernah ditambahkan, update qty bukan duplikasi
+  const exist = cart.find(p => p.id === product.id && p.size === product.size && p.color === product.color);
+
+  if (exist) {
+    exist.qty += qty;
+    exist.total = exist.qty * price;
+  } else {
+    cart.push(product);
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert("Produk berhasil ditambahkan ke keranjang!");
+  window.location.href = "cart.html";
+});
+
+/* === BACKUP DATA PRODUK (OTOMATIS) === */
+function backupProductData() {
+  const productId = 1;
+
+  const backupData = {
+    id: productId,
+    name: "Zoom Vomero 5 Men's Sneakers Shoes - Dark Stucco",
+    images: [
+      "sale2-1.jpg",
+      "sale2-2.jpg",
+      "sale2-3.jpg",
+      "sale2-4.jpg"
+    ],
+    price: 1244000,
+    availableSizes: ["37", "38", "39", "40", "41", "42", "43", "44"],
+    availableColors: ["Hijau"]
+  };
+
+  localStorage.setItem(`product_backup_${productId}`, JSON.stringify(backupData));
+}
+
+backupProductData();
+  </script>
+</body>
+</html>

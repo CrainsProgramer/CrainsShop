@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Produk Crains</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { font-family: Arial, sans-serif; }
+    header {
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo a {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: #111;
+    }
+    main.checkout { display: flex; flex-wrap: wrap; padding: 2rem; gap: 2rem; }
+    .checkout-form { flex: 2; min-width: 300px; }
+    .order-summary { flex: 1; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px; background: #fafafa; }
+    input, select, textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    h2, h3 { border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; }
+    button { background: black; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
+    button:hover { background: #333; }
+    .order-item { display: flex; gap: 1rem; border-bottom: 1px solid #eee; padding: 10px 0; }
+    .order-item img { width: 60px; border-radius: 6px; }
+    .totals { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo"><a href="index.html">CRAINS</a></div>
+  </header>
+
+  <main class="checkout">
+    <section class="checkout-form">
+      <h2>1. Informasi Kontak</h2>
+      <label>Email</label>
+      <input type="email" id="email" placeholder="Masukkan email Anda" required>
+
+      <h2>2. Alamat Pengiriman</h2>
+      <div style="display:flex; gap:1rem;">
+        <div style="flex:1;">
+          <label>Nama Depan</label>
+          <input type="text" id="fname" required>
+        </div>
+        <div style="flex:1;">
+          <label>Nama Belakang</label>
+          <input type="text" id="lname" required>
+        </div>
+      </div>
+      <label>Alamat</label>
+      <input type="text" id="address" required>
+      <label>Kota</label>
+      <input type="text" id="city" required>
+      <label>Provinsi</label>
+      <input type="text" id="province" required>
+      <label>Kode Pos</label>
+      <input type="text" id="zip" required>
+      <label>Telepon</label>
+      <input type="text" id="phone" required>
+
+      <h3>Metode Pembayaran</h3>
+      <select id="payment" required>
+        <option value="">Pilih Metode</option>
+        <option value="Transfer Bank">Transfer Bank</option>
+        <option value="COD">COD (Bayar di Tempat)</option>
+        <option value="E-Wallet">E-Wallet (Dana, OVO, Gopay)</option>
+      </select>
+
+      <button id="payBtn">Bayar Sekarang</button>
+    </section>
+
+    <aside class="order-summary">
+      <h3>Ringkasan Pesanan</h3>
+      <div id="orderList"></div>
+      <p id="subtotal"></p>
+      <p id="shipping">Pengiriman: Rp0</p>
+      <p class="totals" id="total"></p>
+    </aside>
+  </main>
+
+  <script>
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const orderList = document.getElementById("orderList");
+let total = 0;
+
+cart.forEach(item => {
+  orderList.innerHTML += `
+    <div class="order-item">
+      <img src="${item.img}">
+      <div>
+        <p><strong>${item.name}</strong></p>
+        <p>Ukuran: ${item.size} | Warna: ${item.color}</p>
+        <p>Jumlah: ${item.qty}</p>
+        <p>Rp ${item.total.toLocaleString("id-ID")}</p>
+      </div>
+    </div>
+  `;
+  total += item.total;
+});
+
+document.getElementById("subtotal").textContent = `Subtotal: Rp ${total.toLocaleString("id-ID")}`;
+document.getElementById("total").textContent = `Total: Rp ${total.toLocaleString("id-ID")}`;
+
+document.getElementById("payBtn").onclick = function() {
+  // Simpan data order ke orderData
+  localStorage.setItem("orderData", JSON.stringify(cart));
+
+  // Arahkan ke halaman success
+  window.location.href = "success.html";
+};
+</script>
+
+</body>
+</html>
